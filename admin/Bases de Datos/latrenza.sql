@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 23, 2024 at 06:17 AM
+-- Generation Time: Sep 23, 2024 at 08:54 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -118,6 +118,21 @@ INSERT INTO `clientes` (`idventadetalle`, `id_transaccion`, `idproducto`, `canti
 (8, 4, 3, 4, 50.00),
 (9, 5, 4, 3, 19.99),
 (10, 5, 5, 6, 6.50);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `devoluciones`
+--
+
+CREATE TABLE `devoluciones` (
+  `IDDevolucion` int(11) NOT NULL,
+  `IDPedido` int(11) NOT NULL,
+  `IDProducto` int(11) NOT NULL,
+  `Cantidad` int(11) NOT NULL,
+  `Motivo` varchar(255) NOT NULL,
+  `FechaDevolucion` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -276,11 +291,21 @@ CREATE TABLE `pedidos` (
 --
 
 INSERT INTO `pedidos` (`IDPedido`, `IDUsuario`, `IDProducto`, `FechaPedido`) VALUES
-(5, 1, 0, '0000-00-00 00:00:00'),
-(6, 2, 0, '2024-06-05 06:30:24'),
-(7, 1, 1, '2024-06-17 06:49:05'),
-(8, 1, 3, '2024-06-17 06:50:11'),
-(9, 1, 1, '2024-06-17 06:51:07');
+(5, 1, 1, '0000-00-00 00:00:00'),
+(6, 2, 2, '2024-06-05 06:30:24'),
+(7, 1, 3, '2024-06-17 06:49:05'),
+(8, 1, 4, '2024-06-17 06:50:11'),
+(9, 1, 5, '2024-06-17 06:51:07'),
+(11, 1, 1, '2024-06-17 17:00:00'),
+(12, 1, 3, '2024-06-17 18:00:00'),
+(13, 2, 1, '2024-06-17 19:00:00'),
+(14, 2, 2, '2024-06-18 20:00:00'),
+(15, 2, 4, '2024-06-18 21:00:00'),
+(16, 1, 5, '2024-06-18 22:00:00'),
+(17, 1, 6, '2024-06-19 23:00:00'),
+(18, 1, 7, '2024-06-20 00:00:00'),
+(19, 2, 8, '2024-06-20 01:00:00'),
+(20, 2, 9, '2024-06-20 02:00:00');
 
 -- --------------------------------------------------------
 
@@ -402,6 +427,31 @@ INSERT INTO `sabores` (`id_sabor`, `nombre_sabor`, `descripcion`, `tipo_sabor`) 
 (18, 'Pera', 'Sabor dulce y fresco de pera.', 'Frutal'),
 (19, 'Piña', 'Sabor dulce y tropical de piña.', 'Frutal'),
 (20, 'Granola', 'Sabor crujiente y saludable de granola.', 'Salado');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `seguimiento_envios`
+--
+
+CREATE TABLE `seguimiento_envios` (
+  `IDEnvio` int(11) NOT NULL,
+  `IDPedido` int(11) NOT NULL,
+  `Estado` varchar(50) NOT NULL,
+  `FechaActualizacion` timestamp NOT NULL DEFAULT current_timestamp(),
+  `Comentario` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `seguimiento_envios`
+--
+
+INSERT INTO `seguimiento_envios` (`IDEnvio`, `IDPedido`, `Estado`, `FechaActualizacion`, `Comentario`) VALUES
+(6, 5, 'En preparación', '2024-09-23 06:54:06', 'El pedido ha sido recibido y está siendo preparado.'),
+(7, 6, 'En tránsito', '2024-09-23 06:54:06', 'El pedido ha salido para entrega.'),
+(8, 7, 'Entregado', '2024-09-23 06:54:06', 'El pedido ha sido entregado al cliente.'),
+(9, 8, 'En espera', '2024-09-23 06:54:06', 'El pedido está en espera de confirmación.'),
+(10, 9, 'Cancelado', '2024-09-23 06:54:06', 'El pedido ha sido cancelado por el cliente.');
 
 -- --------------------------------------------------------
 
@@ -528,6 +578,14 @@ ALTER TABLE `clientes`
   ADD KEY `idproducto` (`idproducto`);
 
 --
+-- Indexes for table `devoluciones`
+--
+ALTER TABLE `devoluciones`
+  ADD PRIMARY KEY (`IDDevolucion`),
+  ADD KEY `IDPedido` (`IDPedido`),
+  ADD KEY `IDProducto` (`IDProducto`);
+
+--
 -- Indexes for table `empleados`
 --
 ALTER TABLE `empleados`
@@ -573,6 +631,13 @@ ALTER TABLE `sabores`
   ADD PRIMARY KEY (`id_sabor`);
 
 --
+-- Indexes for table `seguimiento_envios`
+--
+ALTER TABLE `seguimiento_envios`
+  ADD PRIMARY KEY (`IDEnvio`),
+  ADD KEY `id_pedido` (`IDPedido`);
+
+--
 -- Indexes for table `usuarios`
 --
 ALTER TABLE `usuarios`
@@ -609,6 +674,12 @@ ALTER TABLE `categorias`
 --
 ALTER TABLE `clientes`
   MODIFY `idventadetalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `devoluciones`
+--
+ALTER TABLE `devoluciones`
+  MODIFY `IDDevolucion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `empleados`
@@ -653,6 +724,12 @@ ALTER TABLE `sabores`
   MODIFY `id_sabor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
+-- AUTO_INCREMENT for table `seguimiento_envios`
+--
+ALTER TABLE `seguimiento_envios`
+  MODIFY `IDEnvio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
 -- AUTO_INCREMENT for table `usuarios`
 --
 ALTER TABLE `usuarios`
@@ -683,6 +760,13 @@ ALTER TABLE `clientes`
   ADD CONSTRAINT `clientes_ibfk_2` FOREIGN KEY (`idproducto`) REFERENCES `productos` (`IDProducto`);
 
 --
+-- Constraints for table `devoluciones`
+--
+ALTER TABLE `devoluciones`
+  ADD CONSTRAINT `devoluciones_ibfk_1` FOREIGN KEY (`IDPedido`) REFERENCES `pedidos` (`IDPedido`),
+  ADD CONSTRAINT `devoluciones_ibfk_2` FOREIGN KEY (`IDProducto`) REFERENCES `productos` (`IDProducto`);
+
+--
 -- Constraints for table `inventario`
 --
 ALTER TABLE `inventario`
@@ -693,6 +777,12 @@ ALTER TABLE `inventario`
 --
 ALTER TABLE `pedidos`
   ADD CONSTRAINT `pedidos_ibfk_1` FOREIGN KEY (`IDUsuario`) REFERENCES `usuarios` (`IDUsuario`);
+
+--
+-- Constraints for table `seguimiento_envios`
+--
+ALTER TABLE `seguimiento_envios`
+  ADD CONSTRAINT `seguimiento_envios_ibfk_1` FOREIGN KEY (`IDPedido`) REFERENCES `pedidos` (`IDPedido`);
 
 --
 -- Constraints for table `ventas`
